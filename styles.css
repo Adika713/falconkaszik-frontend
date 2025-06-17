@@ -111,12 +111,14 @@ body {
 footer {
     background-color: #16213e;
     color: #fff;
-    text-align: center;
     padding: 15px;
     position: fixed;
     bottom: 0;
     width: 100%;
     font-size: 14px;
+    display: flex;
+    justify-content: space-between; /* Align content left and counter right */
+    align-items: center;
 }
 
 footer p {
@@ -132,6 +134,12 @@ footer a {
 
 footer a:hover {
     color: #e94560;
+}
+
+#visitor-counter {
+    margin-right: 20px;
+    color: #e94560;
+    font-size: 14px;
 }
 
 /* Commented out unused styles

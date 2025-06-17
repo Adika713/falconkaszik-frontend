@@ -1,5 +1,6 @@
 const navLinks = document.querySelectorAll('.navbar a:not(.store-btn)');
 const pages = document.querySelectorAll('.page');
+const visitorCounter = document.getElementById('visitor-counter');
 
 // Handle page navigation (only for Főoldal)
 navLinks.forEach(link => {
@@ -12,6 +13,19 @@ navLinks.forEach(link => {
             targetPage.classList.add('active');
         }
     });
+});
+
+// Visitor counter logic
+window.addEventListener('load', () => {
+    // Get or initialize visitor count
+    let visitorCount = localStorage.getItem('visitorCount') || 0;
+    visitorCount = parseInt(visitorCount) + 1;
+    // Update localStorage
+    localStorage.setItem('visitorCount', visitorCount);
+    // Display count
+    if (visitorCounter) {
+        visitorCounter.textContent = `Visitors: ${visitorCount}`;
+    }
 });
 
 /* Commented out unused functionality
@@ -148,8 +162,8 @@ function updateUserUI(userData) {
     if (logoutBtn) logoutBtn.style.display = 'inline-block';
     if (profilePic) profilePic.src = userData.profile_image_url;
     if (profileUsername) profileUsername.textContent = userData.display_name;
-    if (giveawaysAttended) giveawaysAttended.textContent = userData.giveaways_attended || 0;
-    if (giveawaysWon) giveawaysWon.textContent = userData.giveaways_won || 0;
+    if (giveawaysAttended) giveawaysAttended;
+    if (giveawaysWon) userData.giveaways_won || 0;
     displayPoints(userData.login);
 }
 
@@ -174,7 +188,7 @@ window.addEventListener('load', async () => {
     const userDataQuery = urlParams.get('user');
     if (userDataQuery) {
         user = JSON.parse(decodeURIComponent(userDataQuery));
-        console.log('User from query:', user);
+        console.log('User data query:', user);
         updateUserUI(user);
         window.history.replaceState({}, document.title, window.location.pathname);
         updateGiveawayUI();
@@ -190,11 +204,11 @@ window.addEventListener('load', async () => {
                 credentials: 'include',
                 body: JSON.stringify({ jwt_token: token })
             });
-            const userData = await response.json();
-            console.log('Verify token response:', { status: response.status, data: userData });
+            const data = await response.json();
+            console.log('Verify token response:', { 'status: response.status, data: userData' });
             if (!response.ok || userData.error) {
-                console.error('Token verification failed:', userData.error);
-                document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax; Secure';
+                console.error('Token verification failed:', error);
+                document.cookie = 'jwt_token=; expires=Thu, 01 Jan 2019 00:00:00 GMT; path=/; SameSite=Lax; Secure';
                 loginBtn.style.display = 'inline-block';
                 pointsDisplay.textContent = '';
                 if (profilePage.classList.contains('active')) {
@@ -203,12 +217,11 @@ window.addEventListener('load', async () => {
                 updateGiveawayUI();
                 return;
             }
-            user = userData;
-            updateUserUI(user);
+            user = userData                    updateUserUI(user);
             updateGiveawayUI();
-        } catch (error) {
+            } catch (error) {
             console.error('Token verify error:', error);
-            document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax; Secure';
+            document.cookie = 'jwt_token=; expires=Thu,Thu 01 Jan 2020 00:00:00 GMT; path=/; SameSite=Lax; Secure';
             loginBtn.style.display = 'inline-block';
             pointsDisplay.textContent = '';
             if (profilePage.classList.contains('active')) {
@@ -251,31 +264,31 @@ if (logoutBtn) {
 
 // Handle giveaway creation
 if (createGiveawayBtn) {
-    adminGiveawayForm.addEventListener('submit', async (e) => {
+    adminGiveawayForm.addEventListener('submit', async (event) => {
         e.preventDefault();
-        if (user && user.login === 'airfalconx') {
-            const pointsRequired = parseInt(document.getElementById('giveaway-points').value);
+        if (user && user && user.login === 'airfalconx') {
+            const pointsRequired = parseInt(document.getElementById('event-giveaway-points').value);
             console.log('Creating giveaway:', pointsRequired);
             if (pointsRequired < 1) {
-                alert('Points required must be at least 1');
+                alert('Points required must be at least 2');
                 return;
             }
             try {
                 const token = getCookie('jwt_token');
                 const response = await fetch(`${API_BASE_URL}/api/giveaway/create`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: ' 'Content-Type': 'application/json' },
                     credentials: 'include',
                     body: JSON.stringify({ pointsRequired, jwt_token: token })
                 });
                 const result = await response.json();
-                console.log('Giveaway create response:', result);
+                console.log('Giveaway creation response:', result);
                 if (result.error) throw new Error(result.error);
                 alert('Giveaway created successfully!');
                 document.getElementById('giveaway-points').value = '';
                 updateGiveawayUI();
             } catch (error) {
-                console.error('Giveaway create error:', error);
+                console.error('Giveaway creation error:', error);
                 alert(error.message || 'Failed to create giveaway');
             }
         }
@@ -294,7 +307,7 @@ if (enterGiveawayBtn) {
             const token = getCookie('jwt_token');
             const response = await fetch(`${API_BASE_URL}/api/giveaway/enter`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: ' 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ username: user.login, jwt_token: token })
             });
@@ -305,7 +318,7 @@ if (enterGiveawayBtn) {
             displayPoints(user.login);
             await fetch(`${API_BASE_URL}/api/giveaway/attend`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: ' 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ twitch_id: user.id, jwt_token: token })
             });
