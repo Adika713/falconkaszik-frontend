@@ -3,15 +3,9 @@ body {
     font-family: Arial, sans-serif;
     background: #1a1a2e; /* Dark base color */
     color: #fff;
-    /* Hexagon background */
+    /* Static hexagon background */
     background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><polygon points="20,10 30,20 20,30 10,20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
     background-size: 40px 40px;
-    animation: hexagonMove 20s linear infinite;
-}
-
-@keyframes hexagonMove {
-    0% { background-position: 0 0; }
-    100% { background-position: 40px 40px; }
 }
 
 .navbar {
@@ -20,17 +14,38 @@ body {
     display: flex;
     justify-content: center; /* Center navbar items */
     gap: 20px;
+    align-items: center;
 }
 
 .navbar a {
     color: #fff;
     text-decoration: none;
     font-size: 18px;
-    text-align: center; /* Center text within links */
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
 }
 
 .navbar a:hover {
     color: #e94560;
+}
+
+.navbar .store-btn {
+    background-color: #e94560;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.navbar .store-btn:hover {
+    background-color: #d32f4b;
+    color: #fff;
 }
 
 .page {
@@ -50,6 +65,25 @@ body {
     margin: 20px auto;
     max-width: 500px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.card h1 {
+    margin-bottom: 20px;
+    font-size: 32px;
+}
+
+.card p {
+    font-size: 18px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Space between icon and text */
+}
+
+.card i {
+    color: #e94560;
 }
 
 footer {

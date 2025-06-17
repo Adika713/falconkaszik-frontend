@@ -1,22 +1,16 @@
-const navLinks = document.querySelectorAll('.navbar a');
+const navLinks = document.querySelectorAll('.navbar a:not(.store-btn)');
 const pages = document.querySelectorAll('.page');
 
-// Handle page navigation
+// Handle page navigation (only for Főoldal)
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
         const pageId = link.getAttribute('data-page') + '-page';
         pages.forEach(page => page.classList.remove('active'));
-        let targetPage = document.getElementById(pageId);
-        if (!targetPage) {
-            // Create placeholder for Store page
-            targetPage = document.createElement('div');
-            targetPage.id = pageId;
-            targetPage.className = 'page active';
-            targetPage.innerHTML = '<h2>Store</h2><p>Hamarosan elérhető!</p>';
-            document.body.insertBefore(targetPage, document.querySelector('footer'));
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active');
         }
-        targetPage.classList.add('active');
     });
 });
 
@@ -128,6 +122,25 @@ async function updateGiveawayUI() {
         userGiveaway.style.display = 'none';
     }
 }
+
+// Handle page navigation
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pageId = link.getAttribute('data-page') + '-page';
+        pages.forEach(page => page.classList.remove('active'));
+        let targetPage = document.getElementById(pageId);
+        if (!targetPage) {
+            // Create placeholder for Store page
+            targetPage = document.createElement('div');
+            targetPage.id = pageId;
+            targetPage.className = 'page active';
+            targetPage.innerHTML = '<h2>Store</h2><p>Hamarosan elérhető!</p>';
+            document.body.insertBefore(targetPage, document.querySelector('footer'));
+        }
+        targetPage.classList.add('active');
+    });
+});
 
 // Update UI with user data
 function updateUserUI(userData) {
