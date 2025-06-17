@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirFalconX Casino</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="#home" data-page="home">Főoldal</a></li>
+            <li><a href="#giveaway" data-page="giveaway">Giveaway</a></li>
+            <li><a href="#profile" data-page="profile">Profile</a></li>
+        </ul>
+        <div class="auth-section">
+            <span id="points-display" class="points-display"></span>
+            <button id="login-btn" class="login-btn">Login</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="page home-page active" id="home-page">
+            <div class="card-container">
+                <div class="card card-legiano">
+                    <img src="https://via.placeholder.com/300x150?text=Legiano" alt="Legiano">
+                    <h2>Legiano</h2>
+                    <ul>
+                        <li>Gyors be- és kifizetés</li>
+                        <li>Nincs KYC</li>
+                        <li>Crab kaszinó</li>
+                    </ul>
+                    <a href="#" target="_blank">Regisztrálás</a>
+                </div>
+            </div>
+        </div>
+        <div class="page giveaway-page" id="giveaway-page">
+            <h2>Giveaway</h2>
+            <div id="admin-giveaway-form" style="display: none;">
+                <h3>Create Giveaway (Admin)</h3>
+                <form id="create-giveaway-form">
+                    <label for="points-required">Points Required to Enter:</label>
+                    <input type="number" id="points-required" min="1" required>
+                    <button type="submit" class="submit-btn">Create Giveaway</button>
+                </form>
+            </div>
+            <div id="giveaway-status">
+                <p id="no-giveaway-message">Nincs giveaway jelenleg</p>
+                <div id="active-giveaway" style="display: none;">
+                    <p>Active Giveaway: <span id="giveaway-points-required"></span> points to enter</p>
+                    <button id="enter-giveaway-btn" class="submit-btn">Enter Giveaway</button>
+                </div>
+            </div>
+        </div>
+        <div class="page profile-page" id="profile-page">
+            <h2>Profile</h2>
+            <img src="https://via.placeholder.com/100" alt="Profile Picture" id="profile-pic" class="profile-pic">
+            <h3 id="profile-username">Username</h3>
+            <p>Giveaways Attended: <span id="giveaways-attended">0</span></p>
+            <p>Giveaways Won: <span id="giveaways-won">0</span></p>
+            <button id="logout-btn" class="logout-btn" style="display: none;">Logout</button>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>© 2025 AirFalconX. All rights reserved.</p>
+        <p>Please gamble responsibly. For support, visit <a href="https://www.gambleaware.org" target="_blank">GambleAware.org</a>.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
