@@ -38,18 +38,19 @@
         <div class="page giveaway-page" id="giveaway-page">
             <h2>Giveaway</h2>
             <div id="admin-giveaway-form" style="display: none;">
-                <h3>Create Giveaway (Admin)</h3>
-                <form id="create-giveaway-form">
-                    <label for="points-required">Points Required to Enter:</label>
-                    <input type="number" id="points-required" min="1" required>
-                    <button type="submit" class="submit-btn">Create Giveaway</button>
+                <h3>Admin: Create Giveaway</h3>
+                <form>
+                    <label for="giveaway-points">Points Required to Enter:</label>
+                    <input type="number" id="giveaway-points" min="1" required>
+                    <button type="submit" id="create-giveaway-btn">Create Giveaway</button>
                 </form>
             </div>
-            <div id="giveaway-status">
-                <p id="no-giveaway-message">Nincs giveaway jelenleg</p>
-                <div id="active-giveaway" style="display: none;">
-                    <p>Active Giveaway: <span id="giveaway-points-required"></span> points to enter</p>
-                    <button id="enter-giveaway-btn" class="submit-btn">Enter Giveaway</button>
+            <div id="giveaway-content">
+                <p id="no-giveaway">Nincs giveaway jelenleg</p>
+                <div id="user-giveaway" style="display: none;">
+                    <p>Active Giveaway!</p>
+                    <p>Points Needed: <span id="giveaway-points-display">0</span></p>
+                    <button id="enter-giveaway-btn">Enter Giveaway</button>
                 </div>
             </div>
         </div>

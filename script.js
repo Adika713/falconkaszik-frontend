@@ -18,11 +18,12 @@ const enterGiveawayBtn = document.getElementById('enter-giveaway-btn');
 
 // Twitch OAuth Configuration
 const TWITCH_CLIENT_ID = 'z2n5k9lu6ja19cq64d1n1pekwr8pcj';
-const TWITCH_REDIRECT_URI = 'http://localhost:3000/auth/twitch/callback';
+const TWITCH_REDIRECT_URI = 'https://falconkaszik-backend.onrender.com/auth/twitch/callback';
 const TWITCH_AUTH_URL = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(TWITCH_REDIRECT_URI)}&response_type=code&scope=user:read:email&state=${Math.random().toString(36).substring(2)}`;
 
 // StreamElements Configuration
 const channelId = '6658bffc3137495d33b0a3f7';
+const API_BASE_URL = 'https://falconkaszik-backend.onrender.com';
 
 let user = null;
 
@@ -37,7 +38,7 @@ function getCookie(name) {
 // Fetch viewer points
 async function fetchViewerPoints(username) {
     try {
-        const response = await fetch(`http://localhost:3000/api/points/${username}`, {
+        const response = await fetch(`${API_BASE_URL}/api/points/${username}`, {
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });
@@ -70,7 +71,7 @@ async function updateGiveawayUI() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/giveaway/get', {
+        const response = await fetch(`${API_BASE_URL}/api/giveaway/get`, {
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });
@@ -106,11 +107,9 @@ navLinks.forEach(link => {
         pages.forEach(page => page.classList.remove('active'));
         document.getElementById(pageId).classList.add('active');
 
-        // Handle Profile page access when not logged in
         if (pageId === 'profile-page' && !user) {
             profilePage.innerHTML = '<h2>Profile</h2><p>Please log in to view your profile.</p>';
         }
-        // Update giveaway UI when navigating to Giveaway page
         if (pageId === 'giveaway-page') {
             updateGiveawayUI();
         }
@@ -145,7 +144,6 @@ window.addEventListener('load', async () => {
         return;
     }
 
-    // Handle OAuth callback
     const userDataQuery = urlParams.get('user');
     if (userDataQuery) {
         user = JSON.parse(decodeURIComponent(userDataQuery));
@@ -155,10 +153,9 @@ window.addEventListener('load', async () => {
         return;
     }
 
-    // Verify existing session
     if (sessionToken) {
         try {
-            const response = await fetch('http://localhost:3000/auth/verify-session', {
+            const response = await fetch(`${API_BASE_URL}/auth/verify-session`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -210,7 +207,7 @@ if (logoutBtn) {
         try {
             const sessionToken = getCookie('session_token');
             if (sessionToken) {
-                await fetch('http://localhost:3000/api/logout', {
+                await fetch(`${API_BASE_URL}/api/logout`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
@@ -243,11 +240,12 @@ if (createGiveawayBtn) {
                 return;
             }
             try {
-                const response = await fetch('http://localhost:3000/api/giveaway/create', {
+                const sessionToken = getCookie('session_token');
+                const response = await fetch(`${API_BASE_URL}/api/giveaway/create`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({ pointsRequired })
+                    body: JSON.stringify({ pointsRequired, session_token: sessionToken })
                 });
                 const result = await response.json();
                 if (result.error) throw new Error(result.error);
@@ -256,7 +254,7 @@ if (createGiveawayBtn) {
                 updateGiveawayUI();
             } catch (error) {
                 console.error('Error creating giveaway:', error);
-                alert('Failed to create giveaway');
+                alert(error.message || 'Failed to create giveaway');
             }
         }
     });
@@ -270,17 +268,18 @@ if (enterGiveawayBtn) {
             return;
         }
         try {
-            const response = await fetch('http://localhost:3000/api/giveaway/enter', {
+            const sessionToken = getCookie('session_token');
+            const response = await fetch(`${API_BASE_URL}/api/giveaway/enter`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ username: user.login })
+                body: JSON.stringify({ username: user.login, session_token })
             });
             const result = await response.json();
             if (result.error) throw new Error(result.error);
             alert('Entered giveaway successfully!');
-            displayPoints(user.login); // Update navbar points
-            await fetch('http://localhost:3000/api/giveaway/attend', {
+            displayPoints(user.login);
+            await fetch(`${API_BASE_URL}/api/giveaway/attend`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
