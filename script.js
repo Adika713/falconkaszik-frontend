@@ -38,17 +38,23 @@ function getCookie(name) {
 // Fetch viewer points
 async function fetchViewerPoints(username) {
     try {
+        console.log('Fetching points for:', username.toLowerCase());
         const response = await fetch(`${API_BASE_URL}/api/points/${username.toLowerCase()}`, {
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });
         const data = await response.json();
-        console.log('Points fetch response:', data);
-        if (data.error) throw new Error(data.details || data.error);
+        console.log('Points response:', { status: response.status, data });
+        if (!response.ok || data.error) {
+            throw new Error(data.details || data.error || 'Unknown error');
+        }
         return data.points;
     } catch (error) {
-        console.error('Error fetching points:', error);
-        alert(`Failed to fetch points: ${error.message}. Please check StreamElements JWT.`);
+        console.error('Points fetch error:', {
+            message: error.message,
+            username
+        });
+        alert(`Failed to fetch points for ${username}: ${error.message}. Check Render logs.`);
         return null;
     }
 }
@@ -78,7 +84,7 @@ async function updateGiveawayUI() {
             credentials: 'include'
         });
         const giveaway = await response.json();
-        console.log('Giveaway fetch response:', giveaway);
+        console.log('Giveaway response:', giveaway);
         if (giveaway.error) throw new Error(giveaway.error);
 
         if (user.login === 'airfalconx') {
@@ -96,7 +102,7 @@ async function updateGiveawayUI() {
             userGiveaway.style.display = 'none';
         }
     } catch (error) {
-        console.error('Error fetching giveaway:', error);
+        console.error('Giveaway fetch error:', error);
         noGiveaway.style.display = 'block';
         userGiveaway.style.display = 'none';
     }
@@ -133,12 +139,12 @@ function updateUserUI(userData) {
 // Load user data on page load
 window.addEventListener('load', async () => {
     const token = getCookie('jwt_token');
-    console.log('Page load, token found:', !!token);
+    console.log('Page load:', { token_exists: !!token });
     const urlParams = new URLSearchParams(window.location.search);
     const error = urlParams.get('error');
 
     if (error) {
-        console.error('Authentication error:', error);
+        console.error('Auth error:', error);
         loginBtn.style.display = 'inline-block';
         pointsDisplay.textContent = '';
         if (profilePage.classList.contains('active')) {
@@ -151,7 +157,7 @@ window.addEventListener('load', async () => {
     const userDataQuery = urlParams.get('user');
     if (userDataQuery) {
         user = JSON.parse(decodeURIComponent(userDataQuery));
-        console.log('User data from query:', user);
+        console.log('User from query:', user);
         updateUserUI(user);
         window.history.replaceState({}, document.title, window.location.pathname);
         updateGiveawayUI();
@@ -160,6 +166,7 @@ window.addEventListener('load', async () => {
 
     if (token) {
         try {
+            console.log('Verifying token:', token.substring(0, 10) + '...');
             const response = await fetch(`${API_BASE_URL}/auth/verify-token`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -167,9 +174,9 @@ window.addEventListener('load', async () => {
                 body: JSON.stringify({ jwt_token: token })
             });
             const userData = await response.json();
-            console.log('Token verification response:', userData);
-            if (userData.error) {
-                console.error('Token verification error:', userData.error);
+            console.log('Verify token response:', { status: response.status, data: userData });
+            if (!response.ok || userData.error) {
+                console.error('Token verification failed:', userData.error);
                 document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax; Secure';
                 loginBtn.style.display = 'inline-block';
                 pointsDisplay.textContent = '';
@@ -183,7 +190,7 @@ window.addEventListener('load', async () => {
             updateUserUI(user);
             updateGiveawayUI();
         } catch (error) {
-            console.error('Error verifying token:', error);
+            console.error('Token verify error:', error);
             document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax; Secure';
             loginBtn.style.display = 'inline-block';
             pointsDisplay.textContent = '';
@@ -193,7 +200,7 @@ window.addEventListener('load', async () => {
             updateGiveawayUI();
         }
     } else {
-        console.log('No token found on load');
+        console.log('No token found');
         loginBtn.style.display = 'inline-block';
         pointsDisplay.textContent = '';
         if (profilePage.classList.contains('active')) {
@@ -205,14 +212,14 @@ window.addEventListener('load', async () => {
 
 // Handle login
 loginBtn.addEventListener('click', () => {
-    console.log('Login clicked, redirecting to:', TWITCH_AUTH_URL);
+    console.log('Login redirect:', TWITCH_AUTH_URL);
     window.location.href = TWITCH_AUTH_URL;
 });
 
 // Handle logout
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-        console.log('Logout clicked');
+        console.log('Logging out');
         user = null;
         document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax; Secure';
         pointsDisplay.textContent = '';
@@ -231,7 +238,7 @@ if (createGiveawayBtn) {
         e.preventDefault();
         if (user && user.login === 'airfalconx') {
             const pointsRequired = parseInt(document.getElementById('giveaway-points').value);
-            console.log('Creating giveaway with points:', pointsRequired);
+            console.log('Creating giveaway:', pointsRequired);
             if (pointsRequired < 1) {
                 alert('Points required must be at least 1');
                 return;
@@ -245,13 +252,13 @@ if (createGiveawayBtn) {
                     body: JSON.stringify({ pointsRequired, jwt_token: token })
                 });
                 const result = await response.json();
-                console.log('Giveaway creation response:', result);
+                console.log('Giveaway create response:', result);
                 if (result.error) throw new Error(result.error);
                 alert('Giveaway created successfully!');
                 document.getElementById('giveaway-points').value = '';
                 updateGiveawayUI();
             } catch (error) {
-                console.error('Error creating giveaway:', error);
+                console.error('Giveaway create error:', error);
                 alert(error.message || 'Failed to create giveaway');
             }
         }
@@ -265,7 +272,7 @@ if (enterGiveawayBtn) {
             alert('Please log in to enter the giveaway');
             return;
         }
-        console.log('Entering giveaway for user:', user.login);
+        console.log('Entering giveaway:', user.login);
         try {
             const token = getCookie('jwt_token');
             const response = await fetch(`${API_BASE_URL}/api/giveaway/enter`, {
@@ -287,7 +294,7 @@ if (enterGiveawayBtn) {
             });
             updateGiveawayUI();
         } catch (error) {
-            console.error('Error entering giveaway:', error);
+            console.error('Giveaway entry error:', error);
             alert(error.message || 'Failed to enter giveaway');
         }
     });
