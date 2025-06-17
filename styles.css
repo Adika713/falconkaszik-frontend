@@ -1,6 +1,7 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    padding-bottom: 60px; /* Space for fixed footer */
     background: #1a1a2e; /* Dark base color */
     color: #fff;
     /* Static hexagon background */
@@ -111,10 +112,26 @@ footer {
     background-color: #16213e;
     color: #fff;
     text-align: center;
-    padding: 10px;
+    padding: 15px;
     position: fixed;
     bottom: 0;
     width: 100%;
+    font-size: 14px;
+}
+
+footer p {
+    margin: 0;
+    display: inline-block;
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+footer a:hover {
+    color: #e94560;
 }
 
 /* Commented out unused styles
