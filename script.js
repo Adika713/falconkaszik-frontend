@@ -1,3 +1,26 @@
+const navLinks = document.querySelectorAll('.navbar a');
+const pages = document.querySelectorAll('.page');
+
+// Handle page navigation
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const pageId = link.getAttribute('data-page') + '-page';
+        pages.forEach(page => page.classList.remove('active'));
+        let targetPage = document.getElementById(pageId);
+        if (!targetPage) {
+            // Create placeholder for Store page
+            targetPage = document.createElement('div');
+            targetPage.id = pageId;
+            targetPage.className = 'page active';
+            targetPage.innerHTML = '<h2>Store</h2><p>Hamarosan elérhető!</p>';
+            document.body.insertBefore(targetPage, document.querySelector('footer'));
+        }
+        targetPage.classList.add('active');
+    });
+});
+
+/* Commented out unused functionality
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
 const pointsDisplay = document.getElementById('points-display');
@@ -6,8 +29,6 @@ const profilePic = document.getElementById('profile-pic');
 const profileUsername = document.getElementById('profile-username');
 const giveawaysAttended = document.getElementById('giveaways-attended');
 const giveawaysWon = document.getElementById('giveaways-won');
-const navLinks = document.querySelectorAll('.navbar a');
-const pages = document.querySelectorAll('.page');
 const adminGiveawayForm = document.getElementById('admin-giveaway-form');
 const giveawayContent = document.getElementById('giveaway-content');
 const noGiveaway = document.getElementById('no-giveaway');
@@ -107,23 +128,6 @@ async function updateGiveawayUI() {
         userGiveaway.style.display = 'none';
     }
 }
-
-// Handle page navigation
-navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const pageId = link.getAttribute('data-page') + '-page';
-        pages.forEach(page => page.classList.remove('active'));
-        document.getElementById(pageId).classList.add('active');
-
-        if (pageId === 'profile-page' && !user) {
-            profilePage.innerHTML = '<h2>Profile</h2><p>Please log in to view your profile.</p>';
-        }
-        if (pageId === 'giveaway-page') {
-            updateGiveawayUI();
-        }
-    });
-});
 
 // Update UI with user data
 function updateUserUI(userData) {
@@ -299,3 +303,4 @@ if (enterGiveawayBtn) {
         }
     });
 }
+*/
