@@ -61,11 +61,17 @@ body {
 .card {
     background-color: #0f3460;
     border-radius: 10px;
-    padding: 20px;
+    padding: 30px;
     margin: 20px auto;
     max-width: 500px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
+}
+
+.card-logo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 20px;
 }
 
 .card h1 {
@@ -84,6 +90,21 @@ body {
 
 .card i {
     color: #e94560;
+}
+
+.card .register-btn {
+    background-color: #e94560;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.card .register-btn:hover {
+    background-color: #d32f4b;
 }
 
 footer {
