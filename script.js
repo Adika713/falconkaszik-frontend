@@ -18,12 +18,12 @@ const enterGiveawayBtn = document.getElementById('enter-giveaway-btn');
 
 // Twitch OAuth Configuration
 const TWITCH_CLIENT_ID = 'z2n5k9lu6ja19cq64d1n1pekwr8pcj';
-const TWITCH_REDIRECT_URI = 'https://falconkaszik-backend.onrender.com/auth/twitch/callback';
+const TWITCH_REDIRECT_URI = 'YOUR_RENDER_URL/auth/twitch/callback';
 const TWITCH_AUTH_URL = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(TWITCH_REDIRECT_URI)}&response_type=code&scope=user:read:email&state=${Math.random().toString(36).substring(2)}`;
 
 // StreamElements Configuration
 const channelId = '6658bffc3137495d33b0a3f7';
-const API_BASE_URL = 'https://falconkaszik-backend.onrender.com';
+const API_BASE_URL = 'YOUR_RENDER_URL';
 
 let user = null;
 
@@ -38,15 +38,16 @@ function getCookie(name) {
 // Fetch viewer points
 async function fetchViewerPoints(username) {
     try {
-        const response = await fetch(`${API_BASE_URL}/api/points/${username}`, {
+        const response = await fetch(`${API_BASE_URL}/api/points/${username.toLowerCase()}`, {
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include'
         });
         const data = await response.json();
-        if (data.error) throw new Error(data.error);
+        if (data.error) throw new Error(data.details || data.error);
         return data.points;
     } catch (error) {
         console.error('Error fetching points:', error);
+        alert(`Failed to fetch points: ${error.message}`);
         return null;
     }
 }
@@ -57,7 +58,7 @@ async function displayPoints(username) {
     if (points !== null) {
         pointsDisplay.textContent = `Points: ${points}`;
     } else {
-        pointsDisplay.textContent = 'Points: 0';
+        pointsDisplay.textContent = 'Points: N/A';
     }
 }
 
@@ -129,7 +130,7 @@ function updateUserUI(userData) {
 
 // Load user data on page load
 window.addEventListener('load', async () => {
-    const sessionToken = getCookie('session_token');
+    const token = getCookie('jwt_token');
     const urlParams = new URLSearchParams(window.location.search);
     const error = urlParams.get('error');
 
@@ -153,18 +154,18 @@ window.addEventListener('load', async () => {
         return;
     }
 
-    if (sessionToken) {
+    if (token) {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/verify-session`, {
+            const response = await fetch(`${API_BASE_URL}/auth/verify-token`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ session_token: sessionToken })
+                body: JSON.stringify({ jwt_token: token })
             });
             const userData = await response.json();
             if (userData.error) {
-                console.error('Session verification error:', userData.error);
-                document.cookie = 'session_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+                console.error('Token verification error:', userData.error);
+                document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
                 loginBtn.style.display = 'inline-block';
                 pointsDisplay.textContent = '';
                 if (profilePage.classList.contains('active')) {
@@ -177,8 +178,8 @@ window.addEventListener('load', async () => {
             updateUserUI(user);
             updateGiveawayUI();
         } catch (error) {
-            console.error('Error verifying session:', error);
-            document.cookie = 'session_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+            console.error('Error verifying token:', error);
+            document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
             loginBtn.style.display = 'inline-block';
             pointsDisplay.textContent = '';
             if (profilePage.classList.contains('active')) {
@@ -203,29 +204,16 @@ loginBtn.addEventListener('click', () => {
 
 // Handle logout
 if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-        try {
-            const sessionToken = getCookie('session_token');
-            if (sessionToken) {
-                await fetch(`${API_BASE_URL}/api/logout`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ session_token: sessionToken })
-                });
-            }
-            user = null;
-            document.cookie = 'session_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
-            pointsDisplay.textContent = '';
-            loginBtn.style.display = 'inline-block';
-            if (logoutBtn) logoutBtn.style.display = 'none';
-            profilePage.innerHTML = '<h2>Profile</h2><p>Please log in to view your profile.</p>';
-            pages.forEach(page => page.classList.remove('active'));
-            document.getElementById('home-page').classList.add('active');
-            updateGiveawayUI();
-        } catch (error) {
-            console.error('Error during logout:', error);
-        }
+    logoutBtn.addEventListener('click', () => {
+        user = null;
+        document.cookie = 'jwt_token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+        pointsDisplay.textContent = '';
+        loginBtn.style.display = 'inline-block';
+        if (logoutBtn) logoutBtn.style.display = 'none';
+        profilePage.innerHTML = '<h2>Profile</h2><p>Please log in to view your profile.</p>';
+        pages.forEach(page => page.classList.remove('active'));
+        document.getElementById('home-page').classList.add('active');
+        updateGiveawayUI();
     });
 }
 
@@ -240,12 +228,12 @@ if (createGiveawayBtn) {
                 return;
             }
             try {
-                const sessionToken = getCookie('session_token');
+                const token = getCookie('jwt_token');
                 const response = await fetch(`${API_BASE_URL}/api/giveaway/create`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
-                    body: JSON.stringify({ pointsRequired, session_token: sessionToken })
+                    body: JSON.stringify({ pointsRequired, jwt_token: token })
                 });
                 const result = await response.json();
                 if (result.error) throw new Error(result.error);
@@ -268,12 +256,12 @@ if (enterGiveawayBtn) {
             return;
         }
         try {
-            const sessionToken = getCookie('session_token');
+            const token = getCookie('jwt_token');
             const response = await fetch(`${API_BASE_URL}/api/giveaway/enter`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ username: user.login, session_token })
+                body: JSON.stringify({ username: user.login, jwt_token: token })
             });
             const result = await response.json();
             if (result.error) throw new Error(result.error);
@@ -283,7 +271,7 @@ if (enterGiveawayBtn) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ twitch_id: user.id })
+                body: JSON.stringify({ twitch_id: user.id, jwt_token: token })
             });
             updateGiveawayUI();
         } catch (error) {
