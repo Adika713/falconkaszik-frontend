@@ -18,12 +18,12 @@ const enterGiveawayBtn = document.getElementById('enter-giveaway-btn');
 
 // Twitch OAuth Configuration
 const TWITCH_CLIENT_ID = 'z2n5k9lu6ja19cq64d1n1pekwr8pcj';
-const TWITCH_REDIRECT_URI = 'YOUR_RENDER_URL/auth/twitch/callback';
+const TWITCH_REDIRECT_URI = 'https://falconkaszik-backend.onrender.com/auth/twitch/callback';
 const TWITCH_AUTH_URL = `https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent(TWITCH_REDIRECT_URI)}&response_type=code&scope=user:read:email&state=${Math.random().toString(36).substring(2)}`;
 
 // StreamElements Configuration
 const channelId = '6658bffc3137495d33b0a3f7';
-const API_BASE_URL = 'YOUR_RENDER_URL';
+const API_BASE_URL = 'https://falconkaszik-backend.onrender.com';
 
 let user = null;
 
