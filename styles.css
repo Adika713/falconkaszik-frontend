@@ -2,20 +2,20 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     padding-bottom: 60px; /* Space for fixed footer */
-    background: #1a1a2e; /* Dark base color */
+    background: #0f3460; /* Solid background color (matches card) */
     color: #fff;
-    /* Static hexagon background */
-    background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><polygon points="20,10 30,20 20,30 10,20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
-    background-size: 40px 40px;
 }
 
 .navbar {
-    background-color: #16213e;
+    background-color: #1a1a2e; /* Original background color */
     padding: 15px;
     display: flex;
     justify-content: center; /* Center navbar items */
     gap: 20px;
     align-items: center;
+    /* Hexagon background */
+    background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><polygon points="20,10 30,20 20,30 10,20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
+    background-size: 40px 40px;
 }
 
 .navbar a {
@@ -51,9 +51,9 @@ body {
 
 .page {
     display: none;
-    padding: 20px;
+    padding: 20px 20px 100px 20px; /* Extra bottom padding for miniplayer */
     text-align: center;
-    min-height: calc(100vh - 120px); /* Ensure page height accommodates footer and embed */
+    min-height: calc(100vh - 120px); /* Ensure page height accommodates footer */
 }
 
 .page.active {
@@ -109,20 +109,23 @@ body {
     background-color: #d32f4b;
 }
 
-.twitch-embed {
-    margin: 20px auto;
-    max-width: 800px; /* Responsive width */
-    min-height: 400px; /* Minimum per Twitch requirements */
+.twitch-miniplayer {
+    position: fixed;
+    bottom: 70px; /* Above footer */
+    right: 20px;
+    width: 320px; /* Miniplayer width */
+    height: 180px; /* Miniplayer height */
+    z-index: 1000; /* Ensure above other content */
 }
 
-.twitch-embed iframe {
+.twitch-miniplayer iframe {
     width: 100%;
-    height: 400px; /* Adjustable based on design */
+    height: 100%;
     border: none;
 }
 
 footer {
-    background-color: #16213e;
+    background-color: #1a1a2e; /* Original background color */
     color: #fff;
     padding: 15px;
     position: fixed;
@@ -132,6 +135,9 @@ footer {
     display: flex;
     justify-content: space-between; /* Align content left and counter right */
     align-items: center;
+    /* Hexagon background */
+    background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><polygon points="20,10 30,20 20,30 10,20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
+    background-size: 40px 40px;
 }
 
 footer p {
