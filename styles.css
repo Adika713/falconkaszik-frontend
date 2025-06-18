@@ -2,20 +2,17 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     padding-bottom: 60px; /* Space for fixed footer */
-    background: #25253f; /* Similar to navbar/footer (#1a1a2e) but distinct */
+    background: #25253f; /* Page background similar to navbar/footer */
     color: #fff;
 }
 
 .navbar {
-    background-color: #1a1a2e;
+    background-color: #1a1a2e; /* Solid color, no hexagons */
     padding: 15px;
     display: flex;
     justify-content: center; /* Center navbar items */
     gap: 20px;
     align-items: center;
-    /* Hexagon background */
-    background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><polygon points="20,10 30,20 20,30 10,20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
-    background-size: 40px 40px;
 }
 
 .navbar a {
@@ -51,7 +48,7 @@ body {
 
 .page {
     display: none;
-    padding: 20px 20px 80px 20px; /* Reduced bottom padding for miniplayer */
+    padding: 20px 20px 80px 20px; /* Adjusted for miniplayer */
     text-align: center;
     min-height: calc(100vh - 120px); /* Ensure page height accommodates footer */
 }
@@ -61,7 +58,7 @@ body {
 }
 
 .card {
-    background-color: #0f3460;
+    background-color: #0a2a4c; /* Darker than previous #0f3460 */
     border-radius: 10px;
     padding: 30px;
     margin: 20px auto;
@@ -110,12 +107,9 @@ body {
 }
 
 .twitch-miniplayer {
-    position: fixed;
-    bottom: 80px; /* Above footer */
-    right: 20px;
     width: 320px; /* Miniplayer width */
     height: 180px; /* Miniplayer height */
-    z-index: 2000; /* Higher to ensure above all content */
+    z-index: 2000; /* Above all content */
 }
 
 .twitch-miniplayer iframe {
@@ -125,7 +119,7 @@ body {
 }
 
 footer {
-    background-color: #1a1a2e;
+    background-color: #1a1a2e; /* Solid color, no hexagons */
     color: #fff;
     padding: 15px;
     position: fixed;
@@ -135,10 +129,7 @@ footer {
     display: flex;
     justify-content: space-between; /* Align content left and counter right */
     align-items: center;
-    /* Hexagon background */
-    background-image: url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><polygon points="20,10 30,20 20,30 10,20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
-    background-size: 40px 40px;
-    z-index: 1000; /* Ensure below miniplayer */
+    z-index: 1000; /* Below miniplayer */
 }
 
 footer p {
@@ -221,8 +212,7 @@ footer a:hover {
     border-radius: 5px;
 }
 
-#admin-giveaway-form button:hover,
-#enter-giveaway-btn:hover {
+#admin-giveaway-form button:hover, #enter-giveaway-btn:hover {
     background-color: #d32f4b;
 }
 */
