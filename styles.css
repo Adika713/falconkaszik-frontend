@@ -7,7 +7,7 @@ body {
 }
 
 .navbar {
-    background-color: #030c16; /* Solid color, no hexagons */
+    background-color: #02080f; /* Solid color, no hexagons */
     padding: 15px;
     display: flex;
     justify-content: center; /* Center navbar items */
@@ -119,7 +119,7 @@ body {
 }
 
 footer {
-    background-color: #1a1a2e; /* Solid color, no hexagons */
+    background-color: #02080f; /* Solid color, no hexagons */
     color: #fff;
     padding: 15px;
     position: fixed;
